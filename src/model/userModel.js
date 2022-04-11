@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const urlSchema=new mongoose.Schema({
+const userSchema=new mongoose.Schema({
         fname: {
             type:String,
             required:true
@@ -47,5 +47,7 @@ const urlSchema=new mongoose.Schema({
             default:Date.now()
         }
 })
+
+module.exports=mongoose.model("users",userSchema)
 
 
