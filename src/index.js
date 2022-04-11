@@ -1,0 +1,1 @@
+// mongodb+srv://amir-thorium:NSE7ZdUlu4no9WRF@cluster0.gchuo.mongodb.net/Group19-Data-base?authSource=admin&replicaSet=atlas-cw2o95-shard-0&w=majority&readPreference=primary&retryWrites=true&ssl=true
