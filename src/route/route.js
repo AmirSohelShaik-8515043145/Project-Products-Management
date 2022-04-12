@@ -8,5 +8,4 @@ router.post('/register',userController.createUser)
 router.post('/login',loginController.login)
 
 router.get('/user/:userId/profile',userController.getUserProfile)
-
-module.exports = router
+router.put('/user/:userId/profile',userController.updateUser)

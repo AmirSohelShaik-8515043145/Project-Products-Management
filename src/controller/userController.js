@@ -62,18 +62,31 @@ const createUser = async (req, res) => {
 
 // Get User Profile Api ---------------------------------------------
 const getUserProfile = async (req, res) => {
-    let userId = req.params.userId;
-    if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
+    try {
+        let userId = req.params.userId;
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
 
-    let user = await userModel.findById(userId);
-    if (!user) return res.status(404).send({ status: false, message: "No user found according to your search" })
+        let user = await userModel.findById(userId);
+        if (!user) return res.status(404).send({ status: false, message: "No user found according to your search" })
 
-    return res.status(200).send({ status: true, message: "User Profile Details", data: user });
+        return res.status(200).send({ status: true, message: "User Profile Details", data: user });
+    }
+    catch (error) {
+        return res.status(500).send({ status: false, msg: error.message })
+
+    }
+}
+
+
+// Update User Profile Api ------------------------------------------
+const updateUser = async (req, res) => {
+
 }
 
 
 
 module.exports = {
     createUser,
-    getUserProfile
+    getUserProfile,
+    updateUser
 }
