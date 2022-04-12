@@ -2,6 +2,7 @@ const userModel = require("../model/userModel")
 const validator = require("../validator/validator")
 const aws = require("../aws/aws")
 const bcrypt = require('bcrypt')
+const { findById } = require("../model/userModel")
 
 
 // Create User Api --------------------------------------------------
@@ -73,13 +74,27 @@ const getUserProfile = async (req, res) => {
     }
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
-
     }
 }
 
 
 // Update User Profile Api ------------------------------------------
 const updateUser = async (req, res) => {
+    try{
+        let userId = req.params.userId;
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
+        
+        let data = req.body
+        if (!data) { return res.status(400).send({ status: false, msg: "Pls, provide some data to update." }) }
+
+        let user = await findById(userId)
+        if(!user) { return res.status(400).send({ status: false, msg: "No user find with this id, Check your id." }) }
+
+
+    }
+    catch (error){
+        return res.status(500).send({ status: false, msg: error.message })
+    }
 
 }
 
