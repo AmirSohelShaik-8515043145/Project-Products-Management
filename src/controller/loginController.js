@@ -18,16 +18,14 @@ const login = async function (req, res) {
         let user = await userModel.findOne({email:data.email})
         if(!user) {return res.status(400).send({ status: false, msg: "Email or Password is incorrect" })}
 
-        let checkPass = pass.password
+        let checkPass = user.password
         let checkUser = await bcrypt.compare(data.password,checkPass)
         if (checkUser==false) return res.status(400).send({ status: false, msg: "Email or Password is incorrect" })
 
         const token = jwt.sign({
-            userId: pass._id,
-            batch:"Thorium",
-            groupNo:"19"
+            userId: user._id,
         }, "Group-19", {expiresIn: "30m" })
-        return res.status(200).send({ status: true, msg: "You are successfully logged in", token })
+        return res.status(200).send({ status: true, msg: "You are successfully logged in", userId:user.id,token })
     }
     catch (error) {
         return res.status(500).send({ msg: error.message })
