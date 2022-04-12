@@ -8,15 +8,15 @@ const userSchema=new mongoose.Schema({
             type:String, 
             required:true
         },
+        profileImage: {
+            type:String,
+            required:true
+        }, // s3 link
         email: {
             type:String, 
             required:true,
             unique:true
         },
-        profileImage: {
-            type:String,
-            required:true
-        }, // s3 link
         phone: {
             type:String,
             required:true,
@@ -37,16 +37,8 @@ const userSchema=new mongoose.Schema({
             city: {type:String, required:true},
             pincode: {type:Number, required:true}
           }
-        },
-        createdAt: {
-            type:Date,
-            default:Date.now()
-        },
-        updatedAt: {
-            type:Date,
-            default:Date.now()
         }
-})
+},{timestamps:true})
 
 module.exports=mongoose.model("users",userSchema)
 
