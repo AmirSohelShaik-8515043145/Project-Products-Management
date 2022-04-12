@@ -12,6 +12,10 @@ const createUser = async (req, res) => {
         if (!validator.isValid(data.fname)) { return res.status(400).send({ status: false, msg: "fname is required" }) }
         if (!validator.isValid(data.lname)) { return res.status(400).send({ status: false, msg: "lname is required" }) }
         // if (!data.profileImage) { return res.status(400).send({ status: false, msg: "ProfileImage is required" }) }
+        // let imageLink = await aws.uploadFile(req.files);
+        // console.log(imageLink)
+        // data.profileImage = imageLink
+
 
         let files = req.files;
         if (files) {
