@@ -4,6 +4,7 @@ const aws = require("../aws/aws")
 const bcrypt = require('bcrypt')
 
 
+// Create User Api --------------------------------------------------
 const createUser = async (req, res) => {
     try {
         let data = req.body;
@@ -11,11 +12,6 @@ const createUser = async (req, res) => {
 
         if (!validator.isValid(data.fname)) { return res.status(400).send({ status: false, msg: "fname is required" }) }
         if (!validator.isValid(data.lname)) { return res.status(400).send({ status: false, msg: "lname is required" }) }
-        // if (!data.profileImage) { return res.status(400).send({ status: false, msg: "ProfileImage is required" }) }
-        // let imageLink = await aws.uploadFile(req.files);
-        // console.log(imageLink)
-        // data.profileImage = imageLink
-
 
         let files = req.files;
         if (files) {
@@ -63,4 +59,21 @@ const createUser = async (req, res) => {
     }
 }
 
-module.exports.createUser = createUser
+
+// Get User Profile Api ---------------------------------------------
+const getUserProfile = async (req, res) => {
+    let userId = req.params.userId;
+    if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
+
+    let user = await userModel.findById(userId);
+    if (!user) return res.status(404).send({ status: false, message: "No user found according to your search" })
+
+    return res.status(200).send({ status: true, message: "User Profile Details", data: user });
+}
+
+
+
+module.exports = {
+    createUser,
+    getUserProfile
+}
