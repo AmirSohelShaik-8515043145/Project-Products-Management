@@ -13,7 +13,7 @@ const login = async function (req, res) {
         if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(data.email.trim()))){return res.status(400).send({ status:false, msg: "Please enter a valid Email."})};
 
         if (!validator.isValid(data.password)) { return res.status(400).send({ status: false, msg: "Password is required" }) };
-        if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(data.password))) { return res.status(400).send({ status: false, msg: "please provide a valid password with one uppercase letter ,one lowercase, one character and one number " }) }
+        if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(data.password))) { return res.status(400).send({ status: false, msg: "Email or Password is incorrect" }) }
         
         let user = await userModel.findOne({email:data.email})
         if(!user) {return res.status(400).send({ status: false, msg: "Email or Password is incorrect" })}
