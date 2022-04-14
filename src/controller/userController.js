@@ -10,8 +10,10 @@ const createUser = async (req, res) => {
         let data = req.body;
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Bad request, No data provided." }) };
 
-        if (!validator.isValid(data.fname)) { return res.status(400).send({ status: false, msg: "fname is required" }) }
-        if (!validator.isValid(data.lname)) { return res.status(400).send({ status: false, msg: "lname is required" }) }
+        let { fname, lname, profileImage, email, phone, password, address } = data
+
+        if (!validator.isValid(fname)) { return res.status(400).send({ status: false, msg: "fname is required" }) }
+        if (!validator.isValid(lname)) { return res.status(400).send({ status: false, msg: "lname is required" }) }
 
         // Profile Image Create :
         let files = req.files;
@@ -20,39 +22,39 @@ const createUser = async (req, res) => {
         data.profileImage = fileRes.Location;
 
         // Email validation :
-        if (!validator.isValid(data.email)) { return res.status(400).send({ status: false, msg: "email is required" }) }
-        if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(data.email.trim()))) { return res.status(400).send({ status: false, msg: "Please provide a valid email" }) };
-        let duplicateEmail = await userModel.findOne({ email: data.email })
+        if (!validator.isValid(email)) { return res.status(400).send({ status: false, msg: "email is required" }) }
+        if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(email.trim()))) { return res.status(400).send({ status: false, msg: "Please provide a valid email" }) };
+        let duplicateEmail = await userModel.findOne({ email: email })
         if (duplicateEmail) return res.status(400).send({ status: false, msg: 'Email is already exist' })
 
         // Phone number Validation :
-        if (!validator.isValid(data.phone)) { return res.status(400).send({ status: false, msg: "phone is required" }) }
-        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(data.phone.trim()))) { return res.status(400).send({ status: false, msg: "please provide a valid moblie Number" }) };
-        let duplicateNumber = await userModel.findOne({ phone: data.phone })
+        if (!validator.isValid(phone)) { return res.status(400).send({ status: false, msg: "phone is required" }) }
+        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone.trim()))) { return res.status(400).send({ status: false, msg: "please provide a valid moblie Number" }) }
+        let duplicateNumber = await userModel.findOne({ phone: phone })
         if (duplicateNumber) return res.status(400).send({ status: false, msg: 'Phone number is already exist' })
 
         // Password Validation :
-        if (!validator.isValid(data.password)) { return res.status(400).send({ status: false, msg: "password is required" }) }
-        if (!(data.password.length >= 8 && data.password.length <= 15)) { return res.status(400).send({ status: false, message: "Password length should be 8 to 15 characters" }) }
-        if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(data.password.trim()))) { return res.status(400).send({ status: false, msg: "please provide atleast one uppercase letter ,one lowercase, one character and one number " }) }
-        let securePassword = await bcrypt.hash(data.password, 4)
-        data.password = securePassword
+        if (!validator.isValid(password)) { return res.status(400).send({ status: false, msg: "password is required" }) }
+        if (!(password.length >= 8 && password.length <= 15)) { return res.status(400).send({ status: false, message: "Password length should be 8 to 15 characters" }) }
+        if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password.trim()))) { return res.status(400).send({ status: false, msg: "please provide atleast one uppercase letter ,one lowercase, one character and one number " }) }
+        let securePassword = await bcrypt.hash(password, 4)
+        password = securePassword
 
-        if (!data.address) { return res.status(400).send({ status: false, msg: "Address is required" }) }
+        if (!address) { return res.status(400).send({ status: false, msg: "Address is required" }) }
 
         // Shipping Address Validation :
-        if (!data.address.shipping) { return res.status(400).send({ status: false, msg: "Shipping address is required" }) }
-        if (!validator.isValid(data.address.shipping.street)) { return res.status(400).send({ status: false, msg: "street is required for Shipping address" }) }
-        if (!validator.isValid(data.address.shipping.city)) { return res.status(400).send({ status: false, msg: "city is required for Shipping address" }) }
-        if (!validator.isValid(data.address.shipping.pincode)) { return res.status(400).send({ status: false, msg: "pincode is required for Shipping address" }) }
-        if (!(/^[1-9][0-9]{5}$/.test(data.address.shipping.pincode.trim()))) { return res.status(400).send({ status: false, msg: "Pleasee provide a valid pincode for shipping address" }) }
+        if (!address.shipping) { return res.status(400).send({ status: false, msg: "Shipping address is required" }) }
+        if (!validator.isValid(address.shipping.street)) { return res.status(400).send({ status: false, msg: "street is required for Shipping address" }) }
+        if (!validator.isValid(address.shipping.city)) { return res.status(400).send({ status: false, msg: "city is required for Shipping address" }) }
+        if (!validator.isValid(address.shipping.pincode)) { return res.status(400).send({ status: false, msg: "pincode is required for Shipping address" }) }
+        if (!(/^[1-9][0-9]{5}$/.test(address.shipping.pincode.trim()))) { return res.status(400).send({ status: false, msg: "Pleasee provide a valid pincode for shipping address" }) }
 
         // Billing Adrress validation :
-        if (!data.address.billing) { return res.status(400).send({ status: false, msg: "billing address is required" }) }
-        if (!validator.isValid(data.address.billing.street)) { return res.status(400).send({ status: false, msg: "street is required for Billing address" }) }
-        if (!validator.isValid(data.address.billing.city)) { return res.status(400).send({ status: false, msg: "city is required for Billing address" }) }
-        if (!validator.isValid(data.address.billing.pincode)) { return res.status(400).send({ status: false, msg: "pincode is required for Billing address" }) }
-        if (!(/^[1-9][0-9]{5}$/.test(data.address.billing.pincode.trim()))) { return res.status(400).send({ status: false, msg: "Pleasee provide a valid pincode for billing address" }) }
+        if (!address.billing) { return res.status(400).send({ status: false, msg: "billing address is required" }) }
+        if (!validator.isValid(address.billing.street)) { return res.status(400).send({ status: false, msg: "street is required for Billing address" }) }
+        if (!validator.isValid(address.billing.city)) { return res.status(400).send({ status: false, msg: "city is required for Billing address" }) }
+        if (!validator.isValid(address.billing.pincode)) { return res.status(400).send({ status: false, msg: "pincode is required for Billing address" }) }
+        if (!(/^[1-9][0-9]{5}$/.test(address.billing.pincode.trim()))) { return res.status(400).send({ status: false, msg: "Pleasee provide a valid pincode for billing address" }) }
 
         let userCreated = await userModel.create(data);
         res.status(201).send({ status: true, message: "User created successfully", data: userCreated })
@@ -172,7 +174,6 @@ const updateUser = async (req, res) => {
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
     }
-
 }
 
 
