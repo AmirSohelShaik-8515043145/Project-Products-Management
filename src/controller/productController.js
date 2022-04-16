@@ -63,13 +63,13 @@ const getProducts = async function (req, res) {
         let filter = {}
         filter.isDeleted = false
 
-        const { name, size, priceGreaterThan, priceLessThan } = data
+        const { name, size, priceGreaterThan, priceLessThan,priceSort } = data
 
         if (name != null) {
             if (!validator.isValid(name)) { return res.status(400).send({ status: false, msg: "Please provide a Name" }) }
             filter.title = name
         }
-        
+
         if (size != null) {
             let arr = ["S", "XS", "M", "X", "L", "XXL", "XL"]
             if (!arr.includes(size)) { return res.status(400).send({ status: false, msg: "Please select a size in between " + arr }) }
@@ -77,7 +77,6 @@ const getProducts = async function (req, res) {
         }
 
         if (priceGreaterThan != null) {
-            console.log(Number(priceGreaterThan))
             if (Number(priceGreaterThan) == NaN) { return res.status(400).send({ status: false, msg: "Price should be a number" }) }
             if (Number(priceGreaterThan) <= 0) { return res.status(400).send({ status: false, msg: "Price provide a valid price" }) }
             filter.price = { $gte: Number(priceGreaterThan) }
@@ -94,9 +93,14 @@ const getProducts = async function (req, res) {
             if ((Number(priceGreaterThan) <= 0) || (Number(priceLessThan) <= 0)) { return res.status(400).send({ status: false, msg: ".....Price provide a valid price" }) }
             filter.price = { $gte: Number(priceGreaterThan), $lte: Number(priceLessThan) }
         }
-        console.log(filter)
 
-        let product = await productModel.find(filter);
+        if(priceSort!=null){
+            if (!((priceSort == 1) || (priceSort == -1))) {
+                return res.status(400).send({ status: false, message: `priceSort should be 1 or -1 ` })
+            }
+        }
+
+        let product = await productModel.find(filter).sort({price:priceSort});
         if (product.length == 0) return res.status(404).send({ status: false, message: "No product found according to your search" })
         return res.status(200).send({ status: true, message: 'Products found', data: product })
     }
