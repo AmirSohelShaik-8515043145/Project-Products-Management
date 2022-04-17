@@ -69,7 +69,7 @@ const createUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         let userId = req.params.userId;
-        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid user id in Params" }) }
 
         let user = await userModel.findById(userId);
         if (!user) return res.status(404).send({ status: false, message: "No user found according to your search" })
@@ -85,7 +85,7 @@ const getUserProfile = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         let userId = req.params.userId;
-        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put valid user id Params" }) }
+        if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid user id in Params" }) }
 
         let user = await userModel.findById(userId)
         if (!user) { return res.status(400).send({ status: false, msg: `Provided UserId ${userId} Does not exists.` }) }
