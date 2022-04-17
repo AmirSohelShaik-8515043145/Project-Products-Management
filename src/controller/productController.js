@@ -49,7 +49,7 @@ const createProduct = async (req, res) => {
         if(installments) {if (installments % 1 != 0) { return res.status(400).send({ status: false, msg: "installments cannot be a decimal value" }) }}
 
         let userCreated = await productModel.create(data);
-        res.status(201).send({ status: true, message: "User created successfully", data: userCreated })
+        res.status(201).send({ status: true, message: "Product created successfully", data: userCreated })
     }
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
@@ -140,6 +140,13 @@ const updateProduct = async (req, res) => {
         let data = req.body
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = data
 
+        // Product Image validation :
+        let files = req.files
+        if (Object.keys(files).length != 0) {
+            const fileRes = await aws.uploadFile(files[0]);
+            data.productImage = fileRes.Location;
+        }
+
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Pls, provide some data to update." }) }
 
         if (title == 0) { return res.status(400).send({ status: false, msg: "Title cannot be empty" }) }
@@ -176,12 +183,7 @@ const updateProduct = async (req, res) => {
             data.availableSizes = sizeArr
         }
 
-        // Product Image validation :
-        let files = req.files
-        if (Object.keys(files).length != 0) {
-            const fileRes = await aws.uploadFile(files[0]);
-            data.productImage = fileRes.Location;
-        }
+        
 
         let updatedProduct = await productModel.findOneAndUpdate({ _id: productId },
             {

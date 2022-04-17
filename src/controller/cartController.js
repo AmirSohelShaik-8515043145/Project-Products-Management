@@ -37,7 +37,6 @@ const createCart = async (req, res) => {
             return res.status(201).send({ status: true, message: `cart created successfully`, data: cart })
         }
         if (findCart) {
-            console.log(findCart)
             let data = req.body
             if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Bad request, No data provided." }) };
 
@@ -56,10 +55,11 @@ const createCart = async (req, res) => {
                 }
             }
             else {
-                const totalItem = data.items.length + findCart.totalItem
+                const totalItem = data.items.length + findCart.totalItems
+                const totalPrice = findCart.totalPrice + (product.price * data.items[0].quantity)
                 const newCart = await cartModel.findOneAndUpdate({ userId: userId },
                     {
-                        $addToSet: { 'data.items': { $each: data.items } },
+                        $addToSet: { items: { $each: data.items } },
                         totalPrice: totalPrice,
                         totalItems: totalItem
                     }, { new: true })
