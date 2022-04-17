@@ -3,7 +3,7 @@ const aws = require('../aws/aws')
 const productModel = require('../model/productModel')
 const currencySymbol = require("currency-symbol-map")
 
-// Create Product Api --------------------------------------------------
+// Create Product Api ----------------------------------------------------------------------------------------------------------------------------------------------------------
 const createProduct = async (req, res) => {
     try {
         let data = req.body;
@@ -57,7 +57,7 @@ const createProduct = async (req, res) => {
 }
 
 
-// Get Product Api -----------------------------------------------------
+// Get Product Api -------------------------------------------------------------------------------------------------------------------------------------------------------------
 const getProducts = async function (req, res) {
     try {
         data = req.query
@@ -112,7 +112,7 @@ const getProducts = async function (req, res) {
 }
 
 
-// Get Product by Id  -----------------------------------------------------
+// Get Product by Id------------------------------------------------------------------------------------------------------------------------------------------------------------
 const getProductById = async (req, res) => {
     try {
         let productId = req.params.productId;
@@ -128,7 +128,7 @@ const getProductById = async (req, res) => {
 }
 
 
-// Update Product Api -----------------------------------------------------
+// Update Product Api-----------------------------------------------------------------------------------------------------------------------------------------------------------
 const updateProduct = async (req, res) => {
     try {
         let productId = req.params.productId
@@ -208,7 +208,7 @@ const updateProduct = async (req, res) => {
 }
 
 
-// Delete Product Api -----------------------------------------------------
+// Delete Product Api ----------------------------------------------------------------------------------------------------------------------------------------------------------
 const deleteProduct = async function (req, res) {
     try {
         const productId = req.params.productId

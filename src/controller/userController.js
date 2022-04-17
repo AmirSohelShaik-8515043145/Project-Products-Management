@@ -4,7 +4,7 @@ const aws = require("../aws/aws")
 const bcrypt = require('bcrypt')
 
 
-// Create User Api --------------------------------------------------
+// Create User Api ------------------------------------------------------------------------------------------------------------------------------------------------------------
 const createUser = async (req, res) => {
     try {
         let data = req.body;
@@ -65,7 +65,7 @@ const createUser = async (req, res) => {
 }
 
 
-// Get User Profile Api ---------------------------------------------
+// Get User Profile Api --------------------------------------------------------------------------------------------------------------------------------------------------------
 const getUserProfile = async (req, res) => {
     try {
         let userId = req.params.userId;
@@ -81,7 +81,7 @@ const getUserProfile = async (req, res) => {
 }
 
 
-// Update User Profile Api ------------------------------------------
+// Update User Profile Api -----------------------------------------------------------------------------------------------------------------------------------------------------
 const updateUser = async (req, res) => {
     try {
         let userId = req.params.userId;
