@@ -79,7 +79,7 @@ const updateCart = async (req, res) => {
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid user id in Params" }) }
         
         const user = await userModel.findById(userId)
-        if (!user) { return res.status(404).send({ status: false, msg: "user not exist with this userId" }) }
+        if (!user) { return res.status(404).send({ status: false, msg: "user does not exist with this userId" }) }
 
         let data = req.body
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Provide a product details in body to update the cart." }) };
@@ -97,6 +97,8 @@ const updateCart = async (req, res) => {
 
         const findCart = await cartModel.findOne({ userId: userId, _id: cartId })
         if (!findCart) { return res.status(400).send({ status: false, msg: "No cart found,please create cart a first" }) }
+
+        if(findCart.items.length==0){ return res.status(400).send({ status: false, msg: "Cart of this user is already empty,Nothing to delete" }) }
 
         if (removeProduct == 1) {
             for (let i = 0; i < findCart.items.length; i++) {
