@@ -46,7 +46,7 @@ const createProduct = async (req, res) => {
         }
 
         if (installments == 0) { return res.status(400).send({ status: false, msg: "Installment cannot be empty" }) }
-        if(installments) {if (installments % 1 != 0) { return res.status(400).send({ status: false, msg: "installments cannot be a decimal value" }) }}
+        if (installments) { if (installments % 1 != 0) { return res.status(400).send({ status: false, msg: "installments cannot be a decimal value" }) } }
 
         let userCreated = await productModel.create(data);
         res.status(201).send({ status: true, message: "Product created successfully", data: userCreated })
@@ -140,11 +140,12 @@ const updateProduct = async (req, res) => {
         let data = req.body
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = data
 
-        // Product Image validation :
         let files = req.files
-        if (Object.keys(files).length != 0) {
-            const fileRes = await aws.uploadFile(files[0]);
-            data.productImage = fileRes.Location;
+        if (files) {
+            if (Object.keys(files).length != 0) {
+                const fileRes = await aws.uploadFile(files[0]);
+                data.productImage = fileRes.Location;
+            }
         }
 
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Pls, provide some data to update." }) }
@@ -158,7 +159,7 @@ const updateProduct = async (req, res) => {
         if (currencyId) { if (!(currencyId == "INR")) { return res.status(400).send({ status: false, message: 'currencyId should be a INR' }) } }
         if (style == 0) { return res.status(400).send({ status: false, msg: "style cannot be empty" }) }
         if (installments == 0) { return res.status(400).send({ status: false, msg: "installments cannot be empty" }) }
-        if(installments) {if (installments % 1 != 0) { return res.status(400).send({ status: false, msg: "installments cannot be a decimal value" }) }}
+        if (installments) { if (installments % 1 != 0) { return res.status(400).send({ status: false, msg: "installments cannot be a decimal value" }) } }
         if (price == 0) { return res.status(400).send({ status: false, msg: "price cannot be empty" }) }
         if (Number(price) <= 0) { return res.status(400).send({ status: false, message: `Price should be a valid number` }) }
 
@@ -183,7 +184,7 @@ const updateProduct = async (req, res) => {
             data.availableSizes = sizeArr
         }
 
-        
+
 
         let updatedProduct = await productModel.findOneAndUpdate({ _id: productId },
             {
@@ -197,7 +198,7 @@ const updateProduct = async (req, res) => {
                     style: style,
                     availableSizes: availableSizes,
                     productImage: data.productImage,
-                    installments:installments
+                    installments: installments
                 }
             }, { new: true })
         return res.status(201).send({ status: true, product: updatedProduct })

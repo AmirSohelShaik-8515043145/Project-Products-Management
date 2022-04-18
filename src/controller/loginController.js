@@ -25,6 +25,7 @@ const login = async function (req, res) {
         const token = jwt.sign({
             userId: user._id,
         }, "Group-19", {expiresIn: "30m" })
+        res.setHeader('Authorization','Bearer');
         return res.status(200).send({ status: true, msg: "You are successfully logged in", userId:user.id,token })
     }
     catch (error) {

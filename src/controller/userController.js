@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
         if (!(password.length >= 8 && password.length <= 15)) { return res.status(400).send({ status: false, message: "Password length should be 8 to 15 characters" }) }
         if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password.trim()))) { return res.status(400).send({ status: false, msg: "please provide atleast one uppercase letter ,one lowercase, one character and one number " }) }
         let securePassword = await bcrypt.hash(password, 4)
-        password = securePassword
+        data.password = securePassword
 
         if (!address) { return res.status(400).send({ status: false, msg: "Address is required" }) }
 
@@ -94,15 +94,19 @@ const updateUser = async (req, res) => {
         let { fname, lname, profileImage, email, phone, password, address } = data
 
         let files = req.files
-        if (Object.keys(files).length != 0) {
-            const fileRes = await aws.uploadFile(files[0]);
-            data.profileImage = fileRes.Location;
+        if (files) {
+            if (Object.keys(files).length != 0) {
+                const fileRes = await aws.uploadFile(files[0]);
+                data.profileImage = fileRes.Location;
+            }
         }
 
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Pls, provide some data to update." }) }
 
         if (fname == 0) { return res.status(400).send({ status: false, msg: "First name cannot be empty" }) }
         if (lname == 0) { return res.status(400).send({ status: false, msg: "Last name cannot be empty" }) }
+
+
 
         if (password == 0) { return res.status(400).send({ status: false, msg: "Password Cannot be empty" }) }
         if (password) if (!(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(password.trim()))) { return res.status(400).send({ status: false, msg: "Please provide a valid password,   Example :Abcd@452" }) }
