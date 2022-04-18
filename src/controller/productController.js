@@ -101,7 +101,6 @@ const getProducts = async function (req, res) {
             }
         }
 
-        console.log(filter)
         let product = await productModel.find(filter).sort({ price: priceSort });
         if (product.length == 0) return res.status(404).send({ status: false, message: "No product found according to your search" })
         return res.status(200).send({ status: true, message: 'Products found', count: product.length, data: product })
@@ -119,7 +118,7 @@ const getProductById = async (req, res) => {
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in Params" }) }
 
         let product = await productModel.findOne({ _id: productId, isDeleted: false });
-        if (!product) return res.status(404).send({ status: false, message: "No product found according to your search" })
+        if (!product) return res.status(404).send({ status: false, message: "No product with this productId" })
         return res.status(200).send({ status: true, message: "product Details", data: product });
     }
     catch (error) {
@@ -135,7 +134,7 @@ const updateProduct = async (req, res) => {
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in Params" }) }
 
         let product = await productModel.findOne({ _id: productId, isDeleted: false });
-        if (!product) { return res.status(400).send({ status: false, msg: `Provided ProductId ${productId} Does not exists.` }) }
+        if (!product) { return res.status(400).send({ status: false, msg: "No product found with this productId" }) }
 
         let data = req.body
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = data
@@ -216,7 +215,7 @@ const deleteProduct = async function (req, res) {
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in Params" }) }
 
         let product = await productModel.findById(productId);
-        if (!product) { return res.status(400).send({ status: false, msg: `Provided ProductId ${productId} does not exists.` }) }
+        if (!product) { return res.status(400).send({ status: false, msg: "No product found with this productId" }) }
         if (product.isDeleted == true) { return res.status(400).send({ status: true, message: 'Product has been already deleted' }) }
 
         await productModel.findOneAndUpdate({ _id: productId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: new Date() } })

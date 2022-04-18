@@ -22,8 +22,8 @@ const createCart = async (req, res) => {
             const productId = req.body.items[0].productId
             if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in body" }) }
 
-            const product = await productModel.findOne({ _id: productId }, { isDeleted: false })
-            if (!product) return res.status(404).send({ status: false, message: "No product found according to your search" })
+            const product = await productModel.findOne({ _id: productId, isDeleted: false })
+            if (!product) return res.status(404).send({ status: false, message: "This product is already deleted, You can not add this product in your cart" })
 
             const totalItems = data.items.length
             const totalPrice = product.price * data.items[0].quantity
@@ -43,8 +43,8 @@ const createCart = async (req, res) => {
             const productId = req.body.items[0].productId
             if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in body" }) }
 
-            const product = await productModel.findOne({ _id: productId }, { isDeleted: false })
-            if (!product) return res.status(404).send({ status: false, message: "No product found according to your search" })
+            const product = await productModel.findOne({ _id: productId ,isDeleted: false })
+            if (!product) return res.status(404).send({ status: false, message: "This product is already deleted, You can not add this product in your cart" })
 
             for (let i = 0; i < findCart.items.length; i++) {
                 if (productId == findCart.items[i].productId) {
@@ -84,7 +84,7 @@ const getCart = async (req, res) => {
         if (!user) { return res.status(404).send({ status: false, msg: "user does not exist with this userId" }) }
 
         const findCart = await cartModel.findOne({ userId: userId })
-        if (!findCart) { return res.status(400).send({ status: false, msg: "No cart found,please create cart a first" }) }
+        if (!findCart) { return res.status(400).send({ status: false, msg: "No cart found,please create a cart first" }) }
 
         return res.status(200).send({ status: true, message: 'Successfully fetched cart details', data: findCart })
     }
