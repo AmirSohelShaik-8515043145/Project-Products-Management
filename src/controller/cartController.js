@@ -25,6 +25,7 @@ const createCart = async (req, res) => {
             const product = await productModel.findOne({ _id: productId, isDeleted: false })
             if (!product) return res.status(404).send({ status: false, message: "This product is already deleted, You can not add this product in your cart" })
 
+            if(data.items[0].quantity == 0) {return res.status(404).send({ status: false, message: "Quantity can not be zero, Minimum value shuold be 1" })}
             const totalItems = data.items.length
             const totalPrice = product.price * data.items[0].quantity
 
@@ -46,6 +47,8 @@ const createCart = async (req, res) => {
             const product = await productModel.findOne({ _id: productId ,isDeleted: false })
             if (!product) return res.status(404).send({ status: false, message: "This product is already deleted, You can not add this product in your cart" })
 
+            if(data.items[0].quantity == 0) {return res.status(404).send({ status: false, message: "Quantity can not be zero, Minimum value shuold be 1" })}
+            
             for (let i = 0; i < findCart.items.length; i++) {
                 if (productId == findCart.items[i].productId) {
                     const totalPrice = findCart.totalPrice + (product.price * data.items[0].quantity)

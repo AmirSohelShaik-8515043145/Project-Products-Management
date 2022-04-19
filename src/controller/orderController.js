@@ -9,7 +9,6 @@ const createOrder = async function (req, res) {
     try {
         let userId = req.params.userId;
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(userId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid user id in Params" }) }
-
         let user = await userModel.findById(userId)
         if (!user) { return res.status(400).send({ status: false, msg: `Provided UserId ${userId} Does not exists.` }) }
 
@@ -22,16 +21,14 @@ const createOrder = async function (req, res) {
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(cartId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid card id in body" }) }
 
         const findCart = await cartModel.findOne({ _id: cartId, userId: userId })
-        if(!findCart) {return res.status(400).send({ status: false, message: "No cart found with this cartId" })}
+        if (!findCart) { return res.status(400).send({ status: false, message: "No cart found with this cartId" }) }
 
         if (cancellable) {
             if ((typeof (cancellable) != "boolean")) { return res.status(400).send({ status: false, message: 'Cancellable must be boolean , either true or false' }) }
         }
 
         let arr = ['pending', 'completed', 'cancelled']
-        if (status) {
-            if (!(arr.includes(status))) { return res.status(400).send({ status: false, message: `Status must be among [${arr}]` }) }
-        }
+        if (status) { if (!(arr.includes(status))) { return res.status(400).send({ status: false, message: `Status must be among [${arr}]` }) } }
 
         if (findCart.items.length == 0) { return res.status(202).send({ status: false, message: 'Please add some products in cart to make an order' }) }
 
@@ -77,8 +74,8 @@ const updateOrder = async (req, res) => {
         if (!orderId) { return res.status(400).send({ status: false, message: "For update a order you have to put a orderId in body" }) }
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(orderId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid order id in body" }) }
 
-        let findOrder = await orderModel.findOne({_id:orderId,userId: userId })
-        if(!findOrder) {return res.status(400).send({ status: false, message: "No order found with this Order Id " })}
+        let findOrder = await orderModel.findOne({ _id: orderId, userId: userId })
+        if (!findOrder) { return res.status(400).send({ status: false, message: "No order found with this Order Id " }) }
 
         let arr = ['pending', 'completed', 'cancelled']
         if (!validator.isValid(status)) { return res.status(400).send({ status: false, message: "status is required for order updation" }) }
@@ -108,7 +105,6 @@ const updateOrder = async (req, res) => {
             if (findOrder.status == 'completed') {
                 return res.status(400).send({ status: false, message: "Unable to update or change the status, because it's already in completed status." })
             }
-
             if (findOrder.status == 'cancelled') {
                 return res.status(400).send({ status: false, message: "Unable to update or change the status, because it's already in cancelled status." })
             }
@@ -123,8 +119,8 @@ const updateOrder = async (req, res) => {
 // Get Order by Id------------------------------------------------------------------------------------------------------------------------------------------------------------
 const getOrder = async (req, res) => {
     try {
-        let order = await orderModel.find({isDeleted : false});
-        return res.status(200).send({ status: true, totalOrder : order.length, message: "Order Details", data: order });
+        let order = await orderModel.find({ isDeleted: false });
+        return res.status(200).send({ status: true, totalOrder: order.length, message: "Order Details", data: order });
     }
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })

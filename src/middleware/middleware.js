@@ -1,16 +1,15 @@
 const jwt = require("jsonwebtoken");
-const cartModel = require("../model/cartModel");
-const orderModel = require("../model/orderModel");
 const userModel = require("../model/userModel")
 
 const authentication = async function (req, res, next) {
     try {
         let token = req.header('Authorization', 'Bearer Token');
-        if (!token) return res.status(400).send({ status: false, msg: "login is required, Set a header" })
+        if (!token) return res.status(400).send({ status: false, msg: "login is required, Set an auth" })
 
         let splitToken = token.split(" ")[1]
-        let decodedtoken = jwt.verify(splitToken, "Group-19")
-        if (!decodedtoken) return res.status(400).send({ status: false, msg: "token is invalid" })
+
+        let verifiedtoken = jwt.verify(splitToken, "Group-19")
+        if (!verifiedtoken) return res.status(400).send({ status: false, msg: "token is invalid" })
         next();
     }
     catch (error) {
