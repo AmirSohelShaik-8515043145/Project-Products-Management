@@ -1,7 +1,7 @@
 const cartModel = require("../model/cartModel")
 const productModel = require("../model/productModel")
 const userModel = require("../model/userModel")
-const validate = require('../validator/validator');
+const validator = require('../validator/validator');
 
 
 //Create cart api--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -114,10 +114,10 @@ const updateCart = async (req, res) => {
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: "Provide a product details in body to update the cart." }) };
         const { cartId, productId, removeProduct } = data
 
-        if (!validate.isValid(cartId)) { return res.status(400).send({ status: false, msg: "cartId is required" }) }
+        if (!validator.isValid(cartId)) { return res.status(400).send({ status: false, msg: "cartId is required" }) }
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(cartId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid cart id in body" }) }
 
-        if (!validate.isValid(productId)) { return res.status(400).send({ status: false, msg: "productId is required" }) }
+        if (!validator.isValid(productId)) { return res.status(400).send({ status: false, msg: "productId is required" }) }
         if (!(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/.test(productId.trim()))) { return res.status(400).send({ status: false, message: "Please put a valid product id in body" }) }
 
         const findCart = await cartModel.findOne({ userId: userId, _id: cartId })
@@ -126,7 +126,7 @@ const updateCart = async (req, res) => {
         const product = await productModel.findOne({ _id: productId, isDeleted: false })
         if (!product) { return res.status(404).send({ status: false, msg: "product not exist or deleted" }) }
 
-        if (!validate.isValid(removeProduct)) { return res.status(400).send({ status: false, msg: "removeProduct should be present in body" }) }
+        if (!validator.isValid(removeProduct)) { return res.status(400).send({ status: false, msg: "removeProduct should be present in body" }) }
         if (!(removeProduct == 0 || removeProduct == 1)) { return res.status(400).send({ status: false, msg: "removeProduct value should be either 0 or 1" }) }
 
         if (findCart.items.length == 0) { return res.status(400).send({ status: false, msg: "Cart of this user is already empty,Nothing to remove" }) }
