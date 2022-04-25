@@ -173,7 +173,7 @@ const updateUser = async (req, res) => {
                     "address.billing.pincode": billingPincode,
                 }
             }, { new: true })
-        return res.status(201).send({ status: true, updatedUser: updatedUser })
+        return res.status(201).send({ status: true, msg:"User Updated Succesfully",  updatedUser: updatedUser })
     }
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })

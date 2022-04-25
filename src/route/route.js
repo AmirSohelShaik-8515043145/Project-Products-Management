@@ -1,32 +1,33 @@
 const express = require("express")
 const router = express.Router()
-const userController = require("../controller/userController")
+
+const { createUser, getUserProfile, updateUser } = require("../controller/userController")
 const loginController = require('../controller/loginController')
-const productController = require('../controller/productController')
-const cartController = require('../controller/cartController')
-const orderController = require('../controller/orderController')
+const { createProduct, getProducts, getProductById, updateProduct, deleteProduct } = require('../controller/productController')
+const { createCart, getCart, updateCart, deleteCart } = require('../controller/cartController')
+const { createOrder, getOrder, updateOrder } = require('../controller/orderController')
 const { authentication, authorization } = require("../middleware/middleware")
 
 
-router.post('/register', userController.createUser)
-router.get('/user/:userId/profile', authentication, userController.getUserProfile)
-router.put('/user/:userId/profile', authentication, authorization, userController.updateUser)
+router.post('/register', createUser)
+router.get('/user/:userId/profile', authentication, getUserProfile)
+router.put('/user/:userId/profile', authentication, authorization, updateUser)
 
 router.post('/login', loginController.login)
 
-router.post('/products', productController.createProduct)
-router.get('/products', productController.getProducts)
-router.get('/products/:productId', productController.getProductById)
-router.put('/products/:productId', productController.updateProduct)
-router.delete('/products/:productId', productController.deleteProduct)
+router.post('/products', createProduct)
+router.get('/products', getProducts)
+router.get('/products/:productId', getProductById)
+router.put('/products/:productId', updateProduct)
+router.delete('/products/:productId', deleteProduct)
 
-router.post('/users/:userId/cart', authentication, authorization, cartController.createCart)
-router.get('/users/:userId/cart', authentication, authorization, cartController.getCart)
-router.put('/users/:userId/cart', authentication, authorization, cartController.updateCart)
-router.delete('/users/:userId/cart', authentication, authorization, cartController.deleteCart)
+router.post('/users/:userId/cart', authentication, authorization, createCart)
+router.get('/users/:userId/cart', authentication, authorization, getCart)
+router.put('/users/:userId/cart', authentication, authorization, updateCart)
+router.delete('/users/:userId/cart', authentication, authorization, deleteCart)
 
-router.post('/users/:userId/orders', authentication, authorization, orderController.createOrder)
-router.get('/users/:userId/orders', orderController.getOrder)
-router.put('/users/:userId/orders', authentication, authorization, orderController.updateOrder)
+router.post('/users/:userId/orders', authentication, authorization, createOrder)
+router.get('/users/:userId/orders', authentication, authorization, getOrder)
+router.put('/users/:userId/orders', authentication, authorization, updateOrder)
 
 module.exports = router

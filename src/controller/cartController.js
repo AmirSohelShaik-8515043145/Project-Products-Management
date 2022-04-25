@@ -38,7 +38,7 @@ const createCart = async (req, res) => {
                 totalPrice: totalPrice,
                 totalItems: totalItems
             }
-            console.log(cartData)
+            // console.log(cartData)
             const cart = await cartModel.create(cartData)
             return res.status(201).send({ status: true, message: `cart created successfully`, data: cart })
         }
@@ -73,7 +73,6 @@ const createCart = async (req, res) => {
         }
     }
     catch (error) {
-        console.log(error)
         return res.status(500).send({ status: false, msg: error.message });
     }
 }
